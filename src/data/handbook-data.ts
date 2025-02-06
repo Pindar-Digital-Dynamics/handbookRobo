@@ -62,3 +62,38 @@ export interface SubTheme {
       ]
     }
   ]
+
+  // Aggiungi dopo le interfacce esistenti
+export interface Generation {
+    id: string
+    title: string
+    ageRange: string
+    description: string
+  }
+  
+  export const generations: Generation[] = [
+    {
+      id: 'genz',
+      title: 'Gen Z',
+      ageRange: '14 - 27',
+      description: 'Digital natives who value authenticity and work-life integration'
+    },
+    {
+      id: 'millennial',
+      title: 'Millennial',
+      ageRange: '28 - 43',
+      description: 'Tech-savvy optimists focused on purpose and growth'
+    },
+    {
+      id: 'genx',
+      title: 'Gen X',
+      ageRange: '44 - 59',
+      description: 'Independent and adaptable, bridging traditional and digital approaches'
+    },
+    {
+      id: 'boomer',
+      title: 'Baby Boomer',
+      ageRange: '60 - 78',
+      description: 'Experience-driven with strong work ethic and traditional values'
+    }
+  ]

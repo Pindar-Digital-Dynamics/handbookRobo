@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useTheme } from '@/components/providers/theme-provider'
 import { SunIcon, MoonIcon } from 'lucide-react'
-import { handbookData, Theme, SubTheme } from '@/data/handbook-data'
+import { handbookData, Theme, SubTheme, Generation, generations } from '@/data/handbook-data'
 
 type FilterStep = 'theme' | 'subtheme' | 'generation' | 'variant'
 
@@ -12,6 +12,8 @@ export default function HandbookNavigator() {
   const [currentStep, setCurrentStep] = useState<FilterStep>('theme')
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null)
   const [selectedSubTheme, setSelectedSubTheme] = useState<SubTheme | null>(null)
+  const [selectedGeneration, setSelectedGeneration] = useState<Generation | null>(null)
+
 
   const handleBack = () => {
     switch (currentStep) {
@@ -34,9 +36,13 @@ export default function HandbookNavigator() {
   const IntroContent = ({ theme }: { theme: Theme }) => (
     <div className="animate-fadeIn">
       <div className="bg-white dark:bg-slate-800 rounded-lg p-6 shadow-lg">
-        <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-          {theme.title}
-        </h2>
+      <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+  {selectedTheme && currentStep !== 'theme' 
+    ? `${selectedTheme.title} > 
+       ${currentStep === 'subtheme' ? 'Select Subtheme' : 
+         currentStep === 'generation' ? `${selectedSubTheme?.title} > Select Generation` : ''}`
+    : 'Select Theme'}
+</h2>
         <div className="h-64 bg-slate-100 dark:bg-slate-700 rounded-lg mb-4 flex items-center justify-center">
           <p className="text-slate-500 dark:text-slate-400">
             Future character/graphic placeholder
@@ -141,6 +147,31 @@ export default function HandbookNavigator() {
                   ))}
                 </div>
               )}
+              {currentStep === 'generation' && (
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+    {generations.map((generation) => (
+      <button
+        key={generation.id}
+        onClick={() => {
+          setSelectedGeneration(generation)
+          setCurrentStep('variant')
+        }}
+        className="p-4 rounded-lg bg-slate-100 dark:bg-slate-700 
+                   text-slate-700 dark:text-slate-200 
+                   hover:bg-slate-200 dark:hover:bg-slate-600 
+                   transition-colors"
+      >
+        <h3 className="font-bold mb-1">{generation.title}</h3>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mb-2">
+          Age: {generation.ageRange}
+        </p>
+        <p className="text-sm">
+          {generation.description}
+        </p>
+      </button>
+    ))}
+  </div>
+)}
             </div>
           </div>
         </div>
