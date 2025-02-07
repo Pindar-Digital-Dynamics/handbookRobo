@@ -97,3 +97,71 @@ export interface Generation {
       description: 'Experience-driven with strong work ethic and traditional values'
     }
   ]
+
+  export interface Variant {
+    id: string
+    title: string
+    color: string
+    description: string
+    generationId: string  // specifica per quale generazione è questa variante
+    subThemeId: string    // per quale sottotema
+  }
+
+  // Dati delle varianti organizzati per generazione e sottotema
+export const variants: Variant[] = [
+  // Varianti per Gen Z
+  {
+    id: 'genz-tools-digital',
+    title: 'Digital-First Communication',
+    color: 'blue',
+    description: 'Preferenza per comunicazione asincrona attraverso strumenti digitali',
+    generationId: 'genz',
+    subThemeId: 'tools'
+  },
+  {
+    id: 'genz-tools-instant',
+    title: 'Instant Messaging Priority',
+    color: 'green',
+    description: 'Focus su messaggistica istantanea e comunicazione rapida',
+    generationId: 'genz',
+    subThemeId: 'tools'
+  },
+
+  // Varianti per Millennials
+  {
+    id: 'millennial-tools-hybrid',
+    title: 'Hybrid Communication',
+    color: 'blue',
+    description: 'Bilanciamento tra comunicazione digitale e tradizionale',
+    generationId: 'millennial',
+    subThemeId: 'tools'
+  },
+  {
+    id: 'millennial-tools-collab',
+    title: 'Collaborative Tools',
+    color: 'green',
+    description: 'Preferenza per strumenti di collaborazione e project management',
+    generationId: 'millennial',
+    subThemeId: 'tools'
+  },
+
+  // Varianti per Gen X
+  {
+    id: 'genx-tools-balanced',
+    title: 'Balanced Approach',
+    color: 'blue',
+    description: 'Approccio equilibrato tra metodi tradizionali e digitali',
+    generationId: 'genx',
+    subThemeId: 'tools'
+  },
+
+  // Varianti per Boomers
+  {
+    id: 'boomer-tools-traditional',
+    title: 'Traditional Communication',
+    color: 'blue',
+    description: 'Preferenza per comunicazione diretta e face-to-face',
+    generationId: 'boomer',
+    subThemeId: 'tools'
+  }
+]

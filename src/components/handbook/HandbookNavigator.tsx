@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useTheme } from '@/components/providers/theme-provider'
 import { SunIcon, MoonIcon } from 'lucide-react'
-import { handbookData, Theme, SubTheme, Generation, generations } from '@/data/handbook-data'
+import { handbookData, Theme, SubTheme, Generation, generations, variants, Variant } from '@/data/handbook-data'
 
 type FilterStep = 'theme' | 'subtheme' | 'generation' | 'variant'
 
@@ -238,13 +238,59 @@ export default function HandbookNavigator() {
                 </div>
               )}
 
-              {currentStep === 'variant' && (
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                  <p className="text-slate-600 dark:text-slate-400 col-span-full">
-                    Variants coming soon...
-                  </p>
-                </div>
-              )}
+{currentStep === 'variant' && selectedTheme && selectedSubTheme && selectedGeneration && (
+ <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+   {variants
+     .filter(variant => 
+       variant.generationId === selectedGeneration.id && 
+       variant.subThemeId === selectedSubTheme.id
+     ).length === 0 ? (
+       <div className="col-span-full flex flex-col items-center justify-center p-8 text-center">
+         <p className="text-slate-500 dark:text-slate-400 mb-2">
+           No variants available yet for:
+         </p>
+         <p className="text-slate-700 dark:text-slate-300 font-medium">
+           {selectedSubTheme.title} × {selectedGeneration.title}
+         </p>
+       </div>
+     ) : (
+       variants
+         .filter(variant => 
+           variant.generationId === selectedGeneration.id && 
+           variant.subThemeId === selectedSubTheme.id
+         )
+         .map((variant) => (
+           <button
+             type="button"
+             key={variant.id}
+             onClick={() => {
+               console.log('Selected variant:', {
+                 theme: selectedTheme.title,
+                 subtheme: selectedSubTheme.title,
+                 generation: selectedGeneration.title,
+                 variant: variant.title
+               })
+             }}
+             className={`
+               p-4 rounded-lg text-left
+               transition-all duration-300
+               ${variant.color === 'blue' ? 'bg-blue-100 dark:bg-blue-900' : ''}
+               ${variant.color === 'green' ? 'bg-green-100 dark:bg-green-900' : ''}
+               hover:scale-105
+             `}
+           >
+             <h3 className="font-bold mb-2 text-slate-900 dark:text-white">
+               {variant.title}
+             </h3>
+             <p className="text-sm text-slate-600 dark:text-slate-300">
+               {variant.description}
+             </p>
+           </button>
+         ))
+   )}
+ </div>
+)}
+              
             </div>
           </div>
         </div>
