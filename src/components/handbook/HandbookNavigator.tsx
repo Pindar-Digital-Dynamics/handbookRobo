@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useTheme } from '@/components/providers/theme-provider'
 import { SunIcon, MoonIcon } from 'lucide-react'
 import { handbookData, Theme, SubTheme, Generation, generations, variants, Variant } from '@/data/handbook-data'
+import { MainContent } from '@/components/handbook/MainContent'
 
 type FilterStep = 'theme' | 'subtheme' | 'generation' | 'variant'
 
@@ -13,6 +14,8 @@ export default function HandbookNavigator() {
   const [selectedTheme, setSelectedTheme] = useState<Theme | null>(null)
   const [selectedSubTheme, setSelectedSubTheme] = useState<SubTheme | null>(null)
   const [selectedGeneration, setSelectedGeneration] = useState<Generation | null>(null)
+  const [selectedVariant, setSelectedVariant] = useState<Variant | null>(null)
+  
 
   const steps = ['theme', 'subtheme', 'generation', 'variant'] as const
   const currentStepIndex = steps.indexOf(currentStep)
@@ -23,14 +26,20 @@ export default function HandbookNavigator() {
         setCurrentStep('theme')
         setSelectedTheme(null)
         setSelectedSubTheme(null)
+        setSelectedGeneration(null)
+        setSelectedVariant(null)
         break
       case 'generation':
         setCurrentStep('subtheme')
         setSelectedSubTheme(null)
+        setSelectedGeneration(null)
+        setSelectedVariant(null)
         break
       case 'variant':
         setCurrentStep('generation')
         setSelectedGeneration(null)
+       setSelectedVariant(null)
+
         break
     }
   }
@@ -56,20 +65,20 @@ export default function HandbookNavigator() {
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-slate-900 relative">
       <main className="pb-[50vh] p-4 md:p-6">
-        <div className="max-w-7xl mx-auto">
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
-            Generational Handbook
-          </h1>
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-3xl font-bold text-slate-900 dark:text-white mb-6">
+          Generational Handbook
+        </h1>
 
-          {selectedTheme ? (
-            <IntroContent theme={selectedTheme} />
-          ) : (
-            <div className="text-center text-slate-600 dark:text-slate-400 py-12">
-              Select a theme to see its introduction
-            </div>
-          )}
-        </div>
-      </main>
+        <MainContent
+          step={currentStep}
+          selectedTheme={selectedTheme}
+          selectedSubTheme={selectedSubTheme}
+          selectedGeneration={selectedGeneration}
+          selectedVariant={selectedVariant}
+        />
+      </div>
+    </main>
 
       <nav className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white dark:bg-slate-800 
                    shadow-lg border-t border-slate-200 dark:border-slate-700">
@@ -238,39 +247,40 @@ export default function HandbookNavigator() {
                 </div>
               )}
 
-{currentStep === 'variant' && selectedTheme && selectedSubTheme && selectedGeneration && (
- <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-   {variants
-     .filter(variant => 
-       variant.generationId === selectedGeneration.id && 
-       variant.subThemeId === selectedSubTheme.id
-     ).length === 0 ? (
-       <div className="col-span-full flex flex-col items-center justify-center p-8 text-center">
-         <p className="text-slate-500 dark:text-slate-400 mb-2">
-           No variants available yet for:
-         </p>
-         <p className="text-slate-700 dark:text-slate-300 font-medium">
-           {selectedSubTheme.title} × {selectedGeneration.title}
-         </p>
-       </div>
-     ) : (
-       variants
-         .filter(variant => 
-           variant.generationId === selectedGeneration.id && 
-           variant.subThemeId === selectedSubTheme.id
-         )
-         .map((variant) => (
-           <button
-             type="button"
-             key={variant.id}
-             onClick={() => {
-               console.log('Selected variant:', {
-                 theme: selectedTheme.title,
-                 subtheme: selectedSubTheme.title,
-                 generation: selectedGeneration.title,
-                 variant: variant.title
-               })
-             }}
+{currentStep === 'variant' && (
+  <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+    {variants
+      .filter(variant => 
+        variant.generationId === selectedGeneration.id && 
+        variant.subThemeId === selectedSubTheme.id
+      ).length === 0 ? (
+        <div className="col-span-full flex flex-col items-center justify-center p-8 text-center">
+          <p className="text-slate-500 dark:text-slate-400 mb-2">
+            No variants available yet for:
+          </p>
+          <p className="text-slate-700 dark:text-slate-300 font-medium">
+            {selectedSubTheme.title} × {selectedGeneration.title}
+          </p>
+        </div>
+      ) : (
+        variants
+          .filter(variant => 
+            variant.generationId === selectedGeneration.id && 
+            variant.subThemeId === selectedSubTheme.id
+          )
+          .map((variant) => (
+            <button
+              type="button"
+              key={variant.id}
+              onClick={() => {
+                setSelectedVariant(variant)  // Aggiungiamo questo
+                console.log('Selected variant:', {
+                  theme: selectedTheme.title,
+                  subtheme: selectedSubTheme.title,
+                  generation: selectedGeneration.title,
+                  variant: variant.title
+                })
+              }}
              className={`
                p-4 rounded-lg text-left
                transition-all duration-300
