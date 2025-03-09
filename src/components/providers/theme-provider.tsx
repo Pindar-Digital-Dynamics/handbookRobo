@@ -17,22 +17,24 @@ interface ThemeContextValue {
 const ThemeContext = createContext<ThemeContextValue | undefined>(undefined)
 
 export function ThemeProvider({ children, defaultTheme = 'dark' }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    // Durante SSR, restituisci il tema di default
-    if (typeof window === 'undefined') return defaultTheme
-    
-    // Controlla localStorage
-    const stored = localStorage.getItem('handbook-theme') as Theme
-    if (stored) return stored
-    
-    // Controlla preferenze sistema
-    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      return 'dark'
+  // Inizializza con un valore costante per evitare mismatch server/client
+  const [theme, setTheme] = useState<Theme>(defaultTheme)
+  
+  // Carica le preferenze dal localStorage solo dopo il primo render
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('handbook-theme') as Theme
+      if (stored && (stored === 'dark' || stored === 'light')) {
+        setTheme(stored)
+      } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        setTheme('dark')
+      }
+    } catch (error) {
+      console.error('Failed to load theme from localStorage:', error)
     }
-    
-    return defaultTheme
-  })
+  }, [])
 
+  // Applica il tema e salva in localStorage quando cambia
   useEffect(() => {
     const root = window.document.documentElement
     root.classList.remove('light', 'dark')
