@@ -165,3 +165,13 @@ export const variants: Variant[] = [
     subThemeId: 'tools'
   }
 ]
+
+export interface BookPage {
+  id: string;
+  title: string;
+  themeId: string;
+  subThemeId?: string;
+  generationId?: string;
+  variantId?: string;
+  addedAt: number; // timestamp per ordinamento
+}

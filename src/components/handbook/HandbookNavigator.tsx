@@ -80,7 +80,7 @@ export default function HandbookNavigator() {
       </div>
     </main>
 
-      <nav className="fixed bottom-0 left-0 right-0 h-[50vh] bg-white dark:bg-slate-800 
+      <nav className="fixed bottom-0 left-0 right-0 h-[30vh] bg-white dark:bg-slate-800 
                    shadow-lg border-t border-slate-200 dark:border-slate-700">
         <div className="max-w-7xl mx-auto h-full flex flex-col">
           {/* Header statico */}
